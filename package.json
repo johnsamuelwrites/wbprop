@@ -1,0 +1,50 @@
+{
+  "name": "wbprop",
+  "version": "0.1.0",
+  "description": "Everything about Wikibase properties",
+  "main": "index.html",
+  "scripts": {
+    "build": "webpack --mode=development",
+    "test": "webpack-dev-server"
+  },
+  "author": "John Samuel",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnsamuelwrites/wbprop.git"
+  },
+  "keywords": [
+    "Wikidata",
+    "Properties",
+    "Dashboard"
+  ],
+  "bugs": {
+    "url": "https://github.com/johnsamuelwrites/wbprop/issues"
+  },
+  "homepage": "https://github.com/johnsamuelwrites/wbprop#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@material/top-app-bar": "^5.1.0",
+    "autoprefixer": "^9.7.6",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.2",
+    "extract-loader": "^5.0.1",
+    "file-loader": "^6.0.0",
+    "material-design-icons": "^3.0.1",
+    "postcss-loader": "^3.0.0",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "@material/drawer": "^5.1.0",
+    "@material/icon-button": "^5.1.0",
+    "@material/layout-grid": "^5.1.0",
+    "@material/list": "^5.1.0",
+    "@material/menu": "^5.1.0",
+    "material-components-web": "^5.1.0"
+  }
+}

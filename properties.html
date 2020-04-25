@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <title>WBProp: Everything about Wikibase Properties</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="bundle.css">
+</head>
+
+<body>
+  <header class="mdc-top-app-bar app-bar" id="app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+        <span class="mdc-top-app-bar__title">WBProp</span>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+        <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+          aria-label="Download">file_download</button>
+        <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+          aria-label="Share this page">share</button>
+        <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+          aria-label="Search this page">search</button>
+      </section>
+    </div>
+  </header>
+  <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust">
+    <div class="mdc-drawer__content">
+      <div class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">language</i>
+          <span class="mdc-list-item__text">Languages</span>
+        </a>
+        <a class="mdc-list-item" href="#">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">apps</i>
+          <span class="mdc-list-item__text">Properties</span>
+        </a>
+        <a class="mdc-list-item" href="#">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
+          <span class="mdc-list-item__text">Statistics</span>
+        </a>
+        <a class="mdc-list-item" href="#">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">search</i>
+          <span class="mdc-list-item__text">Search</span>
+        </a>
+        <a class="mdc-list-item" href="#">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help</i>
+          <span class="mdc-list-item__text">About</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
+    <main class="main-content" id="main-content">
+    </main>
+  </div>
+  <script src="bundle.js" async></script>
+</body>
+
+</html>
