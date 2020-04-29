@@ -1,24 +1,32 @@
-@use "@material/top-app-bar/mdc-top-app-bar";
-@use "@material/icon-button/mdc-icon-button";
-@use "@material/list/mdc-list";
-@use "@material/menu-surface/mdc-menu-surface";
-@use "@material/menu/mdc-menu";
-@use "@material/drawer/mdc-drawer";
+$mdc-theme-primary: #FFFFFF;
+$mdc-theme-secondary: #3170F3;
+$mdc-theme-background: #28293D;
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+@import "@material/list/mdc-list";
+@import "@material/menu-surface/mdc-menu-surface";
+@import "@material/menu/mdc-menu";
+@import "@material/drawer/mdc-drawer";
+@import "@material/layout-grid/mdc-layout-grid";
 @import "~material-design-icons/iconfont/material-icons.css";
 
 .mdc-top-app-bar {
-   background-color: #00549d;
+   background: mdc-theme-prop-value(secondary);
 }
 
 body {
   display: flex;
-  height: 100vh;
+  height: 200vh;
+  background: mdc-theme-prop-value(background);
 }
 
 .mdc-drawer-app-content {
   flex: auto;
   overflow: auto;
-  position: relative;
+}
+.mdc-drawer__content {
+  color: $mdc-theme-primary;
+  background: mdc-theme-prop-value(secondary);
 }
 
 .main-content {
@@ -32,7 +40,7 @@ body {
 
 // only apply this style if below top app bar
 .mdc-top-app-bar {
+  color: $mdc-theme-primary;
   z-index: 7;
 }
 
-@import "@material/layout-grid/mdc-layout-grid";
