@@ -9,15 +9,23 @@ $mdc-theme-background: #28293D;
 @import "@material/drawer/mdc-drawer";
 @import "@material/layout-grid/mdc-layout-grid";
 @import "~material-design-icons/iconfont/material-icons.css";
+@import "@material/card/mdc-card";
+@import "@material/layout-grid/mdc-layout-grid";
 
 .mdc-top-app-bar {
    background: mdc-theme-prop-value(secondary);
 }
 
-body {
-  display: flex;
-  height: 200vh;
+.mdc-card {
   background: mdc-theme-prop-value(background);
+}
+
+body {
+  margin: 0;
+  background: mdc-theme-prop-value(background);
+}
+.mdc-drawer {
+  border-right-width:0;
 }
 
 .mdc-drawer-app-content {
@@ -30,8 +38,7 @@ body {
 }
 
 .main-content {
-  overflow: auto;
-  height: 100%;
+  padding-top:20px;
 }
 
 .app-bar {
@@ -42,5 +49,10 @@ body {
 .mdc-top-app-bar {
   color: $mdc-theme-primary;
   z-index: 7;
+}
+
+.mdc-top-app-bar .mdc-top-app-bar__action-item,
+.mdc-top-app-bar .mdc-top-app-bar__navigation-icon {
+  color: mdc-theme-prop-value(primary);
 }
 

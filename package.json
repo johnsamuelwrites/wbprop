@@ -40,6 +40,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@material/card": "^6.0.0",
     "@material/drawer": "^5.1.0",
     "@material/icon-button": "^5.1.0",
     "@material/layout-grid": "^5.1.0",
