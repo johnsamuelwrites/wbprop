@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack -p --mode=production --config webpack.prod.js"
+    "build": "webpack --mode=production --config webpack.prod.js"
   },
   "author": "John Samuel",
   "license": "GPL-3.0-or-later",
@@ -49,6 +49,7 @@
     "@material/menu": "^5.1.0",
     "@material/theme": "^6.0.0",
     "@material/top-app-bar": "^5.1.0",
+    "core-js": "^3.44.0",
     "d3": "^7.9.0",
     "material-design-icons": "^3.0.1"
   }
