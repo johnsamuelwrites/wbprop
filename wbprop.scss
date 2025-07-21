@@ -13,7 +13,7 @@ $mdc-theme-background: #28293D;
 @import "@material/layout-grid/mdc-layout-grid";
 
 .mdc-top-app-bar {
-   background: mdc-theme-prop-value(secondary);
+  background: mdc-theme-prop-value(secondary);
 }
 
 .mdc-card {
@@ -24,21 +24,23 @@ body {
   margin: 0;
   background: mdc-theme-prop-value(background);
 }
+
 .mdc-drawer {
-  border-right-width:0;
+  border-right-width: 0;
 }
 
 .mdc-drawer-app-content {
   flex: auto;
   overflow: auto;
 }
+
 .mdc-drawer__content {
   color: $mdc-theme-primary;
   background: mdc-theme-prop-value(secondary);
 }
 
 .main-content {
-  padding-top:20px;
+  padding-top: 20px;
 }
 
 .app-bar {
@@ -56,3 +58,9 @@ body {
   color: mdc-theme-prop-value(primary);
 }
 
+.demo-card__title {
+  color: #F3F4F6;
+  /* dark gray for good contrast */
+  padding: 1rem;
+  margin: 0;
+}
