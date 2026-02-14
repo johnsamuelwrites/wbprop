@@ -1,11 +1,17 @@
 {
   "name": "wbprop",
-  "version": "0.1.0",
-  "description": "Everything about Wikibase properties",
-  "main": "index.html",
+  "version": "0.2.0",
+  "description": "Everything about Wikibase properties - A modern dashboard for exploring properties across any Wikibase instance",
+  "type": "module",
   "scripts": {
-    "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --mode=production --config webpack.prod.js"
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
+    "format": "prettier --write src/"
   },
   "author": "John Samuel",
   "license": "GPL-3.0-or-later",
@@ -15,42 +21,44 @@
   },
   "keywords": [
     "Wikidata",
+    "Wikibase",
     "Properties",
-    "Dashboard"
+    "Dashboard",
+    "SPARQL",
+    "Visualization"
   ],
   "bugs": {
     "url": "https://github.com/johnsamuelwrites/wbprop/issues"
   },
   "homepage": "https://github.com/johnsamuelwrites/wbprop/",
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "autoprefixer": "^10.4.21",
-    "babel-loader": "^8.1.0",
-    "css-loader": "^7.1.2",
-    "extract-loader": "^4.0.3",
-    "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^4.5.2",
-    "postcss-loader": "^8.1.1",
-    "sass": "^1.89.2",
-    "sass-loader": "^8.0.2",
-    "style-loader": "^4.0.0",
-    "webpack": "^5.100.2",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2",
-    "webpack-merge": "^4.2.2"
-  },
   "dependencies": {
-    "@material/card": "^6.0.0",
-    "@material/drawer": "^5.1.0",
-    "@material/icon-button": "^5.1.0",
-    "@material/layout-grid": "^5.1.0",
-    "@material/list": "^5.1.0",
-    "@material/menu": "^5.1.0",
-    "@material/theme": "^6.0.0",
-    "@material/top-app-bar": "^5.1.0",
-    "core-js": "^3.44.0",
+    "@mdi/font": "^7.4.0",
+    "axios": "^1.6.0",
     "d3": "^7.9.0",
-    "material-design-icons": "^3.0.1"
+    "echarts": "^5.5.0",
+    "pinia": "^2.1.0",
+    "vue": "^3.4.0",
+    "vue-echarts": "^6.6.0",
+    "vue-router": "^4.3.0",
+    "vuetify": "^3.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.0",
+    "@types/d3": "^7.4.0",
+    "@types/node": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.21.0",
+    "jsdom": "^27.0.1",
+    "prettier": "^3.2.0",
+    "sass": "^1.70.0",
+    "typescript": "~5.3.0",
+    "vite": "^5.1.0",
+    "vite-plugin-vuetify": "^2.0.0",
+    "vitest": "^1.3.0",
+    "vue-tsc": "^2.0.0"
   }
 }

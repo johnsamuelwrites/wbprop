@@ -1,136 +1,14 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
   <head>
-    <title>WBProp: Everything about Wikibase Properties</title>
-    <link rel="stylesheet" href="bundle.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WBProp - A modern dashboard for exploring properties across any Wikibase instance" />
+    <title>WBProp - Wikibase Properties Dashboard</title>
   </head>
-
   <body>
-    <header class="mdc-top-app-bar app-bar" id="app-bar">
-      <div class="mdc-top-app-bar__row">
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-          <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
-          <span class="mdc-top-app-bar__title">WBProp</span>
-        </section>
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
-            aria-label="Download">file_download</button>
-          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
-            aria-label="Share this page">share</button>
-          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
-            aria-label="Search this page">search</button>
-        </section>
-      </div>
-    </header>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust">
-      <div class="mdc-drawer__content">
-        <div class="mdc-list">
-          <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page">
-            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">language</i>
-            <span class="mdc-list-item__text">Languages</span>
-          </a>
-          <a class="mdc-list-item" href="#">
-            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">apps</i>
-            <span class="mdc-list-item__text">Properties</span>
-          </a>
-          <a class="mdc-list-item" href="#">
-            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
-            <span class="mdc-list-item__text">Statistics</span>
-          </a>
-          <a class="mdc-list-item" href="#">
-            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">search</i>
-            <span class="mdc-list-item__text">Search</span>
-          </a>
-          <a class="mdc-list-item" href="#">
-            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help</i>
-            <span class="mdc-list-item__text">About</span>
-          </a>
-        </div>
-      </div>
-    </aside>
-
-
-    <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
-      <main class="main-content" id="main-content">
-        <div class="mdc-layout-grid">
-          <div class="mdc-layout-grid__inner">
-
-            <!-- Languages -->
-            <div
-              class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-desktop chart-cell">
-              <div class="mdc-card chart-card">
-                <div class="mdc-card__primary-action chart-card__primary-action" tabindex="0">
-                  <div id="d3-chart-languages" class="chart-container"></div>
-                  <div class="chart-card__primary">
-                    <h2 class="chart-card__title mdc-typography mdc-typography--headline6">Languages</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Datatypes -->
-            <div
-              class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-desktop chart-cell">
-              <div class="mdc-card chart-card">
-                <div class="mdc-card__primary-action chart-card__primary-action" tabindex="0">
-                  <div id="d3-chart-datatypes" class="chart-container"></div>
-                  <div class="chart-card__primary">
-                    <h2 class="chart-card__title mdc-typography mdc-typography--headline6">Datatypes</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Properties -->
-            <div
-              class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-desktop chart-cell">
-              <div class="mdc-card chart-card">
-                <div class="mdc-card__primary-action chart-card__primary-action" tabindex="0">
-                  <div id="d3-chart-statements" class="chart-container"></div>
-                  <div class="chart-card__primary">
-                    <h2 class="chart-card__title mdc-typography mdc-typography--headline6">Properties</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- WikiProjects -->
-            <div
-              class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-6-desktop chart-cell">
-              <div class="mdc-card chart-card">
-                <div class="mdc-card__primary-action chart-card__primary-action" tabindex="0">
-                  <div id="d3-chart-projects" class="chart-container"></div>
-                  <div class="chart-card__primary">
-                    <h2 class="chart-card__title mdc-typography mdc-typography--headline6">WikiProjects</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Property Classes -->
-            <div
-              class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-6-desktop chart-cell">
-              <div class="mdc-card chart-card">
-                <div class="mdc-card__primary-action chart-card__primary-action" tabindex="0">
-                  <div id="d3-chart-properties" class="chart-container"></div>
-                  <div class="chart-card__primary">
-                    <h2 class="chart-card__title mdc-typography mdc-typography--headline6">Property Classes</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </main>
-    </div>
-
-    </main>
-    </div>
-    <script src="bundle.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
   </body>
-
 </html>
