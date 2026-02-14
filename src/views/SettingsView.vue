@@ -110,6 +110,15 @@ function isPreset(configId: string): boolean {
                 </template>
                 <template #append>
                   <v-chip
+                    v-if="config.requiresAuthentication"
+                    color="warning"
+                    size="small"
+                    class="mr-2"
+                    prepend-icon="mdi-lock"
+                  >
+                    OAuth Required
+                  </v-chip>
+                  <v-chip
                     v-if="config.id === wikibaseStore.activeConfig.id"
                     color="success"
                     size="small"

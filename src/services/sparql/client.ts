@@ -1,6 +1,19 @@
 import axios, { type AxiosInstance, type AxiosError } from 'axios'
 import type { SparqlResults, WikibaseConfig } from '@/types'
 
+/**
+ * Error thrown when authentication is required to access the SPARQL endpoint
+ */
+export class AuthenticationRequiredError extends Error {
+  constructor(
+    message: string,
+    public readonly authUrl: string
+  ) {
+    super(message)
+    this.name = 'AuthenticationRequiredError'
+  }
+}
+
 export interface SparqlClientOptions {
   timeout?: number
   retries?: number
@@ -16,6 +29,7 @@ const DEFAULT_OPTIONS: Required<SparqlClientOptions> = {
 export class SparqlClient {
   private axiosInstance: AxiosInstance
   private options: Required<SparqlClientOptions>
+  private config: WikibaseConfig
   private requestQueue: Array<() => Promise<void>> = []
   private activeRequests = 0
   private maxConcurrent: number
@@ -24,6 +38,7 @@ export class SparqlClient {
     config: WikibaseConfig,
     options: SparqlClientOptions = {}
   ) {
+    this.config = config
     this.options = { ...DEFAULT_OPTIONS, ...options }
     this.maxConcurrent = config.rateLimit?.concurrent ?? 5
 
@@ -34,6 +49,8 @@ export class SparqlClient {
         Accept: 'application/sparql-results+json',
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
+      // Include cookies for cookie-based auth (e.g., Commons wcqsOauth/wcqsSession)
+      withCredentials: config.cookieBasedAuth ?? false,
     })
   }
 
@@ -41,7 +58,35 @@ export class SparqlClient {
    * Execute a SPARQL query
    */
   async query(sparql: string): Promise<SparqlResults> {
+    // For cookie-based auth, let the request proceed - browser will handle cookies
+    // Only block if requiresAuthentication is true AND it's not cookie-based
+    if (this.config.requiresAuthentication && !this.config.cookieBasedAuth) {
+      const note = this.config.availabilityNote ??
+        `${this.config.name} requires authenticated access for SPARQL queries.`
+      throw new Error(note)
+    }
     return this.executeWithRetry(sparql)
+  }
+
+  /**
+   * Get the authentication URL for this endpoint (if available)
+   */
+  getAuthUrl(): string | undefined {
+    return this.config.authUrl
+  }
+
+  /**
+   * Check if this endpoint requires authentication
+   */
+  requiresAuth(): boolean {
+    return this.config.requiresAuthentication ?? false
+  }
+
+  /**
+   * Check if this endpoint uses cookie-based authentication
+   */
+  usesCookieAuth(): boolean {
+    return this.config.cookieBasedAuth ?? false
   }
 
   /**
@@ -146,6 +191,16 @@ export class SparqlClient {
     switch (status) {
       case 400:
         return new Error(`Invalid query: ${message}`)
+      case 401:
+      case 403:
+        // Authentication required or failed
+        if (this.config.cookieBasedAuth && this.config.authUrl) {
+          return new AuthenticationRequiredError(
+            `Authentication required. Please login to ${this.config.name}.`,
+            this.config.authUrl
+          )
+        }
+        return new Error(`Authentication required for ${this.config.name}.`)
       case 429:
         return new Error('Rate limit exceeded. Please try again later.')
       case 500:

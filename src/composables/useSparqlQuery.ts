@@ -16,15 +16,23 @@ export interface QueryState<T> {
 export function useSparqlQuery<T>(
   queryFn: (builder: QueryBuilder) => string,
   transformFn: (results: SparqlResults) => T,
-  options: { immediate?: boolean } = { immediate: true }
+  options: { immediate?: boolean; enabled?: (configId: string) => boolean } = { immediate: true }
 ): QueryState<T> {
   const wikibaseStore = useWikibaseStore()
 
   const data = ref<T | null>(null) as Ref<T | null>
   const isLoading = ref(false)
   const error = ref<string | null>(null)
+  const isEnabled = () => options.enabled?.(wikibaseStore.activeConfig.id) ?? true
 
   async function fetchData() {
+    if (!isEnabled()) {
+      data.value = null
+      error.value = null
+      isLoading.value = false
+      return
+    }
+
     isLoading.value = true
     error.value = null
 
@@ -46,14 +54,18 @@ export function useSparqlQuery<T>(
   watch(
     () => wikibaseStore.activeConfig.id,
     () => {
-      if (options.immediate) {
+      if (options.immediate && isEnabled()) {
         fetchData()
+      } else {
+        data.value = null
+        error.value = null
+        isLoading.value = false
       }
     }
   )
 
   // Initial fetch
-  if (options.immediate) {
+  if (options.immediate && isEnabled()) {
     fetchData()
   }
 
@@ -130,12 +142,22 @@ export function transformPropertyClassResults(results: SparqlResults): ChartData
 }
 
 /**
+ * Transform Commons distinct rdf:type list
+ */
+export function transformCommonsDistinctTypes(results: SparqlResults): string[] {
+  return results.results.bindings
+    .map((binding) => binding.val?.value ?? '')
+    .filter((value) => value.length > 0)
+}
+
+/**
  * Hook for datatype statistics
  */
 export function useDatatypeStats() {
   return useSparqlQuery(
     (builder) => builder.buildDatatypeQuery(),
-    transformDatatypeResults
+    transformDatatypeResults,
+    { immediate: true, enabled: (configId) => configId !== 'commons' }
   )
 }
 
@@ -145,7 +167,8 @@ export function useDatatypeStats() {
 export function useLanguageStats(limit = 10) {
   return useSparqlQuery(
     (builder) => builder.buildLanguageQuery(limit),
-    transformLanguageResults
+    transformLanguageResults,
+    { immediate: true, enabled: (configId) => configId !== 'commons' }
   )
 }
 
@@ -155,7 +178,8 @@ export function useLanguageStats(limit = 10) {
 export function usePropertyStats(limit = 15) {
   return useSparqlQuery(
     (builder) => builder.buildPropertyStatementQuery(limit),
-    transformPropertyResults
+    transformPropertyResults,
+    { immediate: true, enabled: (configId) => configId !== 'commons' }
   )
 }
 
@@ -165,7 +189,8 @@ export function usePropertyStats(limit = 15) {
 export function useWikiProjectStats(limit = 20) {
   return useSparqlQuery(
     (builder) => builder.buildWikiProjectQuery(limit),
-    transformWikiProjectResults
+    transformWikiProjectResults,
+    { immediate: true, enabled: (configId) => configId === 'wikidata' }
   )
 }
 
@@ -175,6 +200,18 @@ export function useWikiProjectStats(limit = 20) {
 export function usePropertyClassStats(limit = 20) {
   return useSparqlQuery(
     (builder) => builder.buildPropertyClassQuery(limit),
-    transformPropertyClassResults
+    transformPropertyClassResults,
+    { immediate: true, enabled: (configId) => configId !== 'commons' }
+  )
+}
+
+/**
+ * Hook for Commons distinct rdf:type values
+ */
+export function useCommonsDistinctTypes(limit = 200) {
+  return useSparqlQuery(
+    (builder) => builder.buildCommonsDistinctTypesQuery(limit),
+    transformCommonsDistinctTypes,
+    { immediate: true, enabled: (configId) => configId === 'commons' }
   )
 }

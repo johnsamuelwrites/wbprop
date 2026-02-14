@@ -15,6 +15,7 @@ export class QueryBuilder {
       `PREFIX entity: <${this.config.entityPrefix}>`,
       'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>',
       'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
+      'PREFIX schema: <http://schema.org/>',
       'PREFIX bd: <http://www.bigdata.com/rdf#>',
     ]
 
@@ -167,6 +168,32 @@ LIMIT ${limit}
 `.trim()
     }
 
+    if (this.config.id === 'commons') {
+      return `
+${this.getPrefixes()}
+
+SELECT ?property ?propertyLabel (COUNT(DISTINCT ?item) AS ?count)
+WHERE {
+  ?item ?predicate ?value.
+  FILTER(STRSTARTS(STR(?item), "https://commons.wikimedia.org/entity/M"))
+  FILTER(STRSTARTS(STR(?predicate), "https://commons.wikimedia.org/prop/direct/"))
+  BIND(
+    IRI(
+      REPLACE(
+        STR(?predicate),
+        "^https://commons.wikimedia.org/prop/direct/",
+        "https://commons.wikimedia.org/entity/"
+      )
+    ) AS ?property
+  )
+  ${this.getLabelService()}
+}
+GROUP BY ?property ?propertyLabel
+ORDER BY DESC(?count)
+LIMIT ${limit}
+`.trim()
+    }
+
     // Generic query for other Wikibase instances
     return `
 ${this.getPrefixes()}
@@ -239,6 +266,22 @@ LIMIT ${limit}
 OFFSET ${offset}
 `.trim()
   }
+
+  /**
+   * Query (Commons): list distinct rdf:type values
+   */
+  buildCommonsDistinctTypesQuery(limit = 200): string {
+    return `
+${this.getPrefixes()}
+
+SELECT DISTINCT ?val
+WHERE {
+  ?item rdf:type ?val.
+}
+LIMIT ${limit}
+`.trim()
+  }
+
 }
 
 /**

@@ -34,6 +34,21 @@ export interface WikibaseConfig {
 
   /** Theme customization for this instance */
   theme?: WikibaseTheme
+
+  /** Whether this endpoint requires authenticated access (e.g., OAuth) */
+  requiresAuthentication?: boolean
+
+  /**
+   * Whether authentication is cookie-based (browser handles it automatically).
+   * If true, requests will be made with credentials and may work if user is logged in.
+   */
+  cookieBasedAuth?: boolean
+
+  /** URL to redirect user to for OAuth login (if authentication required) */
+  authUrl?: string
+
+  /** Optional note shown when special access is required */
+  availabilityNote?: string
 }
 
 export interface WikibaseFeatures {

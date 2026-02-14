@@ -56,6 +56,7 @@ export const FACTGRID_CONFIG: WikibaseConfig = {
 
 /**
  * Wikimedia Commons structured data
+ * Uses cookie-based OAuth: wcqsOauth (long-lived) and wcqsSession (JWT, auto-refreshed via 307)
  */
 export const COMMONS_CONFIG: WikibaseConfig = {
   id: 'commons',
@@ -71,10 +72,19 @@ export const COMMONS_CONFIG: WikibaseConfig = {
     qualifiers: true,
     references: true,
   },
+  customPrefixes: {
+    wd: 'https://commons.wikimedia.org/entity/',
+    wdt: 'https://commons.wikimedia.org/prop/direct/',
+  },
   rateLimit: {
     requestsPerMinute: 60,
     concurrent: 5,
   },
+  // Commons uses cookie-based OAuth - browser will include cookies automatically
+  requiresAuthentication: true,
+  cookieBasedAuth: true,
+  authUrl: 'https://commons-query.wikimedia.org/',
+  availabilityNote: 'Wikimedia Commons Query Service requires login. Click "Login" to authenticate with your Wikimedia account.',
   theme: {
     primary: '#006699',
     secondary: '#339966',
@@ -87,7 +97,7 @@ export const COMMONS_CONFIG: WikibaseConfig = {
 export const RHIZOME_CONFIG: WikibaseConfig = {
   id: 'rhizome',
   name: 'Rhizome',
-  sparqlEndpoint: 'https://artbase.rhizome.org/query/sparql',
+  sparqlEndpoint: 'https://query.artbase.rhizome.org/proxy/wdqs/bigdata/namespace/wdq/sparql',
   entityPrefix: 'https://artbase.rhizome.org/entity/',
   propertyPrefix: 'P',
   wikibaseOntology: 'http://wikiba.se/ontology#',
