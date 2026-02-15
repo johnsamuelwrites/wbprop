@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import type { ChartDataItem } from '@/types'
+import ExportMenu from './ExportMenu.vue'
+
 defineProps<{
   title: string
   subtitle?: string
   icon?: string
   loading?: boolean
   error?: string | null
+  exportData?: ChartDataItem[]
+  exportFilename?: string
 }>()
 
 const emit = defineEmits<{
@@ -18,6 +23,11 @@ const emit = defineEmits<{
       <v-icon v-if="icon" :icon="icon" class="mr-2" size="small" />
       {{ title }}
       <v-spacer />
+      <ExportMenu
+        v-if="exportData && exportData.length > 0 && exportFilename"
+        :data="exportData"
+        :filename="exportFilename"
+      />
       <v-btn
         icon="mdi-refresh"
         variant="text"

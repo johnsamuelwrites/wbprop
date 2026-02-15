@@ -170,6 +170,8 @@ function openAuthPage() {
           icon="mdi-translate"
           :loading="languageStats.isLoading.value"
           :error="languageStats.error.value"
+          :export-data="languageStats.data.value ?? undefined"
+          export-filename="languages"
           @refresh="languageStats.refetch"
         >
           <BarChart
@@ -188,6 +190,8 @@ function openAuthPage() {
           icon="mdi-code-tags"
           :loading="datatypeStats.isLoading.value"
           :error="datatypeStats.error.value"
+          :export-data="datatypeStats.data.value ?? undefined"
+          export-filename="datatypes"
           @refresh="datatypeStats.refetch"
         >
           <BarChart
@@ -206,6 +210,8 @@ function openAuthPage() {
           icon="mdi-format-list-bulleted"
           :loading="propertyStats.isLoading.value"
           :error="propertyStats.error.value"
+          :export-data="propertyStats.data.value ?? undefined"
+          export-filename="properties"
           @refresh="propertyStats.refetch"
         >
           <BarChart
@@ -224,6 +230,8 @@ function openAuthPage() {
           icon="mdi-account-group"
           :loading="wikiProjectStats.isLoading.value"
           :error="wikiProjectStats.error.value"
+          :export-data="wikiProjectStats.data.value ?? undefined"
+          export-filename="wikiprojects"
           @refresh="wikiProjectStats.refetch"
         >
           <BarChart
@@ -242,6 +250,8 @@ function openAuthPage() {
           icon="mdi-shape"
           :loading="propertyClassStats.isLoading.value"
           :error="propertyClassStats.error.value"
+          :export-data="propertyClassStats.data.value ?? undefined"
+          export-filename="property-classes"
           @refresh="propertyClassStats.refetch"
         >
           <BarChart
