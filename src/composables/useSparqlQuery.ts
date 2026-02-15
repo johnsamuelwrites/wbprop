@@ -25,7 +25,7 @@ export function useSparqlQuery<T>(
   const error = ref<string | null>(null)
   const isEnabled = () => options.enabled?.(wikibaseStore.activeConfig.id) ?? true
 
-  async function fetchData() {
+  async function fetchData(fresh = false) {
     if (!isEnabled()) {
       data.value = null
       error.value = null
@@ -40,7 +40,12 @@ export function useSparqlQuery<T>(
       const client = new SparqlClient(wikibaseStore.activeConfig)
       const builder = new QueryBuilder(wikibaseStore.activeConfig)
       const query = queryFn(builder)
-      const results = await client.query(query)
+
+      // Use queryFresh when explicitly refreshing to bypass cache
+      const results = fresh
+        ? await client.queryFresh(query)
+        : await client.query(query)
+
       data.value = transformFn(results)
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Unknown error occurred'
@@ -73,7 +78,7 @@ export function useSparqlQuery<T>(
     data,
     isLoading,
     error,
-    refetch: fetchData,
+    refetch: () => fetchData(true),
   }
 }
 

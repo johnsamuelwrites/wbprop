@@ -4,6 +4,7 @@ import { useWikibaseStore } from '@/stores/wikibase'
 import { useTheme } from 'vuetify'
 import { createWikibaseConfig } from '@/types'
 import { PRESET_CONFIGS } from '@/config/presets'
+import { getQueryCache } from '@/services/cache'
 
 const wikibaseStore = useWikibaseStore()
 const theme = useTheme()
@@ -46,6 +47,22 @@ function removeInstance(configId: string) {
 function isPreset(configId: string): boolean {
   return PRESET_CONFIGS.some((c) => c.id === configId)
 }
+
+// Cache management
+const cache = getQueryCache()
+const cacheStats = ref(cache.getStats())
+const cacheCleared = ref(false)
+
+function clearCache() {
+  cache.clear()
+  cacheStats.value = cache.getStats()
+  cacheCleared.value = true
+  setTimeout(() => { cacheCleared.value = false }, 3000)
+}
+
+function refreshCacheStats() {
+  cacheStats.value = cache.getStats()
+}
 </script>
 
 <template>
@@ -74,6 +91,50 @@ function isPreset(configId: string): boolean {
               color="primary"
               hide-details
             />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title class="d-flex align-center">
+            <v-icon icon="mdi-cached" class="mr-2" />
+            Query Cache
+            <v-spacer />
+            <v-btn
+              icon="mdi-refresh"
+              variant="text"
+              size="small"
+              @click="refreshCacheStats"
+            />
+          </v-card-title>
+          <v-card-text>
+            <div class="d-flex align-center mb-3">
+              <span class="text-medium-emphasis">
+                {{ cacheStats.entries }} cached {{ cacheStats.entries === 1 ? 'query' : 'queries' }}
+              </span>
+              <v-chip size="x-small" variant="tonal" class="ml-2">
+                TTL: {{ Math.round(cacheStats.ttlMs / 60000) }}min
+              </v-chip>
+            </div>
+            <v-btn
+              color="warning"
+              variant="tonal"
+              size="small"
+              prepend-icon="mdi-delete-sweep"
+              @click="clearCache"
+            >
+              Clear Cache
+            </v-btn>
+            <v-alert
+              v-if="cacheCleared"
+              type="success"
+              variant="tonal"
+              density="compact"
+              class="mt-3"
+            >
+              Cache cleared successfully
+            </v-alert>
           </v-card-text>
         </v-card>
       </v-col>

@@ -17,6 +17,20 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vue-vendor': ['vue', 'vue-router', 'pinia'],
+          'vuetify-vendor': ['vuetify'],
+          'echarts-core': ['echarts/core', 'echarts/renderers', 'vue-echarts'],
+          'echarts-charts': [
+            'echarts/charts',
+            'echarts/components',
+          ],
+          'd3-vendor': ['d3'],
+        },
+      },
+    },
   },
   server: {
     port: 3000,

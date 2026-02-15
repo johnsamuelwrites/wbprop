@@ -42,9 +42,21 @@ const emit = defineEmits<{
     </v-card-subtitle>
 
     <v-card-text class="chart-content">
-      <!-- Loading State -->
-      <div v-if="loading" class="d-flex align-center justify-center" style="height: 200px">
-        <v-progress-circular indeterminate color="primary" />
+      <!-- Skeleton Loading State -->
+      <div v-if="loading" class="skeleton-container">
+        <div class="skeleton-bars">
+          <v-skeleton-loader type="text" class="mb-2" />
+          <div class="d-flex align-end ga-1 skeleton-bar-group">
+            <v-skeleton-loader
+              v-for="i in 8"
+              :key="i"
+              type="image"
+              class="skeleton-bar"
+              :style="{ height: `${30 + Math.random() * 70}%` }"
+            />
+          </div>
+          <v-skeleton-loader type="text" class="mt-2" />
+        </div>
       </div>
 
       <!-- Error State -->
@@ -81,5 +93,31 @@ const emit = defineEmits<{
 .chart-content {
   flex: 1;
   min-height: 200px;
+}
+
+.skeleton-container {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.skeleton-bars {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-bar-group {
+  flex: 1;
+  align-items: flex-end;
+}
+
+.skeleton-bar {
+  flex: 1;
+  min-width: 0;
+  border-radius: 4px 4px 0 0;
 }
 </style>

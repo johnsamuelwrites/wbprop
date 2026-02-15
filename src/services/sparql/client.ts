@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosError } from 'axios'
 import type { SparqlResults, WikibaseConfig } from '@/types'
+import { QueryCache, getQueryCache } from '@/services/cache'
 
 /**
  * Error thrown when authentication is required to access the SPARQL endpoint
@@ -18,29 +19,45 @@ export interface SparqlClientOptions {
   timeout?: number
   retries?: number
   retryDelay?: number
+  cache?: QueryCache | false
 }
 
-const DEFAULT_OPTIONS: Required<SparqlClientOptions> = {
+const DEFAULT_OPTIONS: Required<Omit<SparqlClientOptions, 'cache'>> = {
   timeout: 30000,
   retries: 2,
   retryDelay: 1000,
 }
 
+/**
+ * In-flight request deduplication map
+ * Key: cache key, Value: promise for the result
+ */
+const inflightRequests = new Map<string, Promise<SparqlResults>>()
+
 export class SparqlClient {
   private axiosInstance: AxiosInstance
-  private options: Required<SparqlClientOptions>
+  private options: Required<Omit<SparqlClientOptions, 'cache'>>
   private config: WikibaseConfig
   private requestQueue: Array<() => Promise<void>> = []
   private activeRequests = 0
   private maxConcurrent: number
+  private cache: QueryCache | null
 
   constructor(
     config: WikibaseConfig,
     options: SparqlClientOptions = {}
   ) {
     this.config = config
-    this.options = { ...DEFAULT_OPTIONS, ...options }
+    const { cache: cacheOpt, ...rest } = options
+    this.options = { ...DEFAULT_OPTIONS, ...rest }
     this.maxConcurrent = config.rateLimit?.concurrent ?? 5
+
+    // Use provided cache, global cache, or null if explicitly disabled
+    if (cacheOpt === false) {
+      this.cache = null
+    } else {
+      this.cache = cacheOpt ?? getQueryCache()
+    }
 
     this.axiosInstance = axios.create({
       baseURL: config.sparqlEndpoint,
@@ -55,7 +72,7 @@ export class SparqlClient {
   }
 
   /**
-   * Execute a SPARQL query
+   * Execute a SPARQL query with caching and deduplication
    */
   async query(sparql: string): Promise<SparqlResults> {
     // For cookie-based auth, let the request proceed - browser will handle cookies
@@ -65,7 +82,59 @@ export class SparqlClient {
         `${this.config.name} requires authenticated access for SPARQL queries.`
       throw new Error(note)
     }
-    return this.executeWithRetry(sparql)
+
+    const cacheKey = QueryCache.makeKey(this.config.id, sparql)
+
+    // Check cache first
+    if (this.cache) {
+      const cached = this.cache.get(cacheKey)
+      if (cached) {
+        return cached
+      }
+    }
+
+    // Deduplicate: if the same query is already in-flight, reuse it
+    const inflight = inflightRequests.get(cacheKey)
+    if (inflight) {
+      return inflight
+    }
+
+    // Execute and track the in-flight request
+    const promise = this.executeWithRetry(sparql)
+      .then((results) => {
+        // Cache successful results
+        if (this.cache) {
+          this.cache.set(cacheKey, results, this.config.id)
+        }
+        return results
+      })
+      .finally(() => {
+        inflightRequests.delete(cacheKey)
+      })
+
+    inflightRequests.set(cacheKey, promise)
+    return promise
+  }
+
+  /**
+   * Execute a query bypassing the cache (forces a fresh request)
+   */
+  async queryFresh(sparql: string): Promise<SparqlResults> {
+    if (this.config.requiresAuthentication && !this.config.cookieBasedAuth) {
+      const note = this.config.availabilityNote ??
+        `${this.config.name} requires authenticated access for SPARQL queries.`
+      throw new Error(note)
+    }
+
+    const results = await this.executeWithRetry(sparql)
+
+    // Still cache the fresh result
+    if (this.cache) {
+      const cacheKey = QueryCache.makeKey(this.config.id, sparql)
+      this.cache.set(cacheKey, results, this.config.id)
+    }
+
+    return results
   }
 
   /**
