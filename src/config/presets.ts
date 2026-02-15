@@ -115,6 +115,29 @@ export const RHIZOME_CONFIG: WikibaseConfig = {
 }
 
 /**
+ * John Samuel - Personal Wikibase Cloud instance
+ */
+export const JOHNSAMUEL_CONFIG: WikibaseConfig = {
+  id: 'johnsamuel',
+  name: 'John Samuel',
+  sparqlEndpoint: 'https://jsamwrites.wikibase.cloud/query/sparql',
+  entityPrefix: 'https://jsamwrites.wikibase.cloud/entity/',
+  propertyPrefix: 'P',
+  wikibaseOntology: 'http://wikiba.se/ontology#',
+  labelService: true,
+  supportedFeatures: {
+    statements: true,
+    sitelinks: false,
+    qualifiers: true,
+    references: true,
+  },
+  rateLimit: {
+    requestsPerMinute: 30,
+    concurrent: 3,
+  },
+}
+
+/**
  * All preset configurations
  */
 export const PRESET_CONFIGS: WikibaseConfig[] = [
@@ -122,6 +145,7 @@ export const PRESET_CONFIGS: WikibaseConfig[] = [
   FACTGRID_CONFIG,
   COMMONS_CONFIG,
   RHIZOME_CONFIG,
+  JOHNSAMUEL_CONFIG,
 ]
 
 /**
